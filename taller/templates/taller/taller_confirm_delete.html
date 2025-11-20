@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar Taller{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Eliminar Taller</h1>
+  <p>¿Estás seguro que quieres eliminar el taller <strong>{{ object.razon_social }}</strong>?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a class="btn btn-secondary" href="{% url 'taller:taller_list' %}">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

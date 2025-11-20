@@ -1,0 +1,12 @@
+{
+  "name": "vellanta-a11y",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "axe-core": "^4.7.3",
+    "puppeteer": "^21.3.8"
+  },
+  "scripts": {
+    "a11y": "node tools/axe_check.js"
+  }
+}

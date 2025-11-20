@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar Llanta{% endblock %}
+{% block content %}
+  <h2>Eliminar Llanta</h2>
+  <p>¿Estás seguro que deseas eliminar "{{ object }}"?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit">Eliminar</button>
+    <a class="btn btn-secondary" href="{% url 'inventario:llanta_list' %}">Cancelar</a>
+  </form>
+{% endblock %}

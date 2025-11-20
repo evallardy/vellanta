@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}Taller{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>{% if object %}Editar Taller{% else %}Nuevo Taller{% endif %}</h1>
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        {{ form.id_empresa.label_tag }}
+        {{ form.id_empresa }}
+        {% if form.id_empresa.help_text %}<small class="form-text text-muted">{{ form.id_empresa.help_text }}</small>{% endif %}
+        {{ form.id_empresa.errors }}
+      </div>
+      <div class="col-md-6 mb-3">
+        {{ form.razon_social.label_tag }}
+        {{ form.razon_social }}
+        {% if form.razon_social.help_text %}<small class="form-text text-muted">{{ form.razon_social.help_text }}</small>{% endif %}
+        {{ form.razon_social.errors }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8 mb-3">
+        {{ form.direccion.label_tag }}
+        {{ form.direccion }}
+        {{ form.direccion.errors }}
+      </div>
+      <div class="col-md-2 mb-3">
+        {{ form.numero_exterior.label_tag }}
+        {{ form.numero_exterior }}
+        {{ form.numero_exterior.errors }}
+      </div>
+      <div class="col-md-2 mb-3">
+        {{ form.numero_interior.label_tag }}
+        {{ form.numero_interior }}
+        {{ form.numero_interior.errors }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        {{ form.colonia.label_tag }}
+        {{ form.colonia }}
+        {{ form.colonia.errors }}
+      </div>
+      <div class="col-md-2 mb-3">
+        {{ form.codigo_postal.label_tag }}
+        {{ form.codigo_postal }}
+        {{ form.codigo_postal.errors }}
+      </div>
+      <div class="col-md-3 mb-3">
+        {{ form.municipio.label_tag }}
+        {{ form.municipio }}
+        {{ form.municipio.errors }}
+      </div>
+      <div class="col-md-3 mb-3">
+        {{ form.estado.label_tag }}
+        {{ form.estado }}
+        {{ form.estado.errors }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        {{ form.telefono.label_tag }}
+        {{ form.telefono }}
+        {% if form.telefono.help_text %}<small class="form-text text-muted">{{ form.telefono.help_text }}</small>{% endif %}
+        {{ form.telefono.errors }}
+      </div>
+      <div class="col-md-4 mb-3">
+        {{ form.longitud.label_tag }}
+        {{ form.longitud }}
+        {{ form.longitud.errors }}
+      </div>
+      <div class="col-md-4 mb-3">
+        {{ form.latitud.label_tag }}
+        {{ form.latitud }}
+        {{ form.latitud.errors }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        {{ form.estatus.label_tag }}
+        {{ form.estatus }}
+        {{ form.estatus.errors }}
+      </div>
+      <div class="col-md-6 mb-3">
+        {{ form.imagen.label_tag }}
+        {{ form.imagen }}
+        {% if form.imagen.help_text %}<small class="form-text text-muted">{{ form.imagen.help_text }}</small>{% endif %}
+        {{ form.imagen.errors }}
+        {% if object.imagen %}
+          <div class="mt-2">
+            <img src="{{ object.imagen.url }}" alt="{{ object.razon_social }}" class="img-thumbnail" style="max-width: 200px;">
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="d-flex">
+      <button class="btn btn-primary me-2" type="submit">Guardar</button>
+      <a class="btn btn-secondary" href="{% url 'taller:taller_list' %}">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
