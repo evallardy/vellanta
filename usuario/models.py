@@ -1,6 +1,7 @@
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from .password_reset import CodigoVerificacion
 
 class Usuario(AbstractUser):
 	materno = models.CharField(max_length=150, blank=True)
@@ -14,6 +15,9 @@ class Usuario(AbstractUser):
 		('administrador', 'Administrador'),
 	)
 	rol = models.CharField('Rol', max_length=20, choices=ROL_CHOICES, default='cliente')
+	
+	# Talleres a los que pertenece el usuario (solo para rol 'taller')
+	talleres = models.ManyToManyField('taller.Taller', related_name='usuarios', blank=True, verbose_name='Talleres')
 
 	class Meta:
 		verbose_name = 'Usuario'

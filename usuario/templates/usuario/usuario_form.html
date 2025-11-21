@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% block title %}Usuario{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>{% if object %}Editar Usuario{% else %}Nuevo Usuario{% endif %}</h1>
+  
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
+    {% if is_admin_editing %}
+    {# Administrador editando otro usuario desde CRUD #}
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        {% if form.username.help_text %}<small class="form-text text-muted">{{ form.username.help_text }}</small>{% endif %}
+        {{ form.username.errors }}
+      </div>
+      <div class="col-md-6 mb-3">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+        {% if form.email.help_text %}<small class="form-text text-muted">{{ form.email.help_text }}</small>{% endif %}
+        {{ form.email.errors }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        {{ form.first_name.label_tag }}
+        {{ form.first_name }}
+        {{ form.first_name.errors }}
+      </div>
+      <div class="col-md-4 mb-3">
+        {{ form.last_name.label_tag }}
+        {{ form.last_name }}
+        {{ form.last_name.errors }}
+      </div>
+      <div class="col-md-4 mb-3">
+        {{ form.materno.label_tag }}
+        {{ form.materno }}
+        {{ form.materno.errors }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        {{ form.celular.label_tag }}
+        {{ form.celular }}
+        {{ form.celular.errors }}
+      </div>
+      <div class="col-md-6 mb-3">
+        {{ form.rol.label_tag }}
+        {{ form.rol }}
+        {% if form.rol.help_text %}<small class="form-text text-muted">{{ form.rol.help_text }}</small>{% endif %}
+        {{ form.rol.errors }}
+      </div>
+    </div>
+    {% elif user.rol == 'administrador' %}
+    {# Administrador editando su propia cuenta #}
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        {% if form.username.help_text %}<small class="form-text text-muted">{{ form.username.help_text }}</small>{% endif %}
+        {{ form.username.errors }}
+      </div>
+      <div class="col-md-6 mb-3">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+        {% if form.email.help_text %}<small class="form-text text-muted">{{ form.email.help_text }}</small>{% endif %}
+        {{ form.email.errors }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        {{ form.first_name.label_tag }}
+        {{ form.first_name }}
+        {{ form.first_name.errors }}
+      </div>
+      <div class="col-md-4 mb-3">
+        {{ form.last_name.label_tag }}
+        {{ form.last_name }}
+        {{ form.last_name.errors }}
+      </div>
+      <div class="col-md-4 mb-3">
+        {{ form.materno.label_tag }}
+        {{ form.materno }}
+        {{ form.materno.errors }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 mb-3">
+        {{ form.celular.label_tag }}
+        {{ form.celular }}
+        {{ form.celular.errors }}
+      </div>
+    </div>
+    {% elif user.rol == 'taller' or user.rol == 'cliente' %}
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        {{ form.username.label_tag }}
+        <input type="text" class="form-control" value="{{ object.username }}" disabled>
+      </div>
+      <div class="col-md-6 mb-3">
+        {{ form.email.label_tag }}
+        <input type="email" class="form-control" value="{{ object.email }}" disabled>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        {{ form.first_name.label_tag }}
+        <input type="text" class="form-control" value="{{ object.first_name }}" disabled>
+      </div>
+      <div class="col-md-4 mb-3">
+        {{ form.last_name.label_tag }}
+        <input type="text" class="form-control" value="{{ object.last_name }}" disabled>
+      </div>
+      <div class="col-md-4 mb-3">
+        {{ form.materno.label_tag }}
+        <input type="text" class="form-control" value="{{ object.materno }}" disabled>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 mb-3">
+        {{ form.celular.label_tag }}
+        {{ form.celular }}
+        {{ form.celular.errors }}
+      </div>
+    </div>
+
+    {% if user.rol == 'taller' %}
+    <div class="row">
+      <div class="col-12 mb-3">
+        <div class="card">
+          <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Mis Talleres</h5>
+          </div>
+          <div class="card-body">
+            {% if object.talleres.all %}
+              <ul class="list-group">
+                {% for taller in object.talleres.all %}
+                  <li class="list-group-item">
+                    <strong>{{ taller.id_empresa }}</strong> - {{ taller.razon_social }}
+                    <br><small class="text-muted">{{ taller.municipio }}, {{ taller.estado }}</small>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="text-muted mb-0">No estás asignado a ningún taller.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% endif %}
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        {{ form.password1.label_tag }}
+        {{ form.password1 }}
+        {% if form.password1.help_text %}<small class="form-text text-muted">{{ form.password1.help_text }}</small>{% endif %}
+        {{ form.password1.errors }}
+      </div>
+      <div class="col-md-6 mb-3">
+        {{ form.password2.label_tag }}
+        {{ form.password2 }}
+        {{ form.password2.errors }}
+      </div>
+    </div>
+
+    {% if is_admin_editing %}
+    {# Solo cuando administrador edita otro usuario desde CRUD #}
+    <div class="row">
+      <div class="col-12 mb-3">
+        <div class="card">
+          <div class="card-header bg-success text-white">
+            <h5 class="mb-0">{{ form.talleres.label }}</h5>
+          </div>
+          <div class="card-body">
+            {{ form.talleres }}
+            {% if form.talleres.help_text %}<small class="form-text text-muted d-block mt-2">{{ form.talleres.help_text }}</small>{% endif %}
+            {{ form.talleres.errors }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <div class="form-check">
+          {{ form.is_active }}
+          {{ form.is_active.label_tag }}
+          {% if form.is_active.help_text %}<small class="form-text text-muted d-block">{{ form.is_active.help_text }}</small>{% endif %}
+          {{ form.is_active.errors }}
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="form-check">
+          {{ form.is_staff }}
+          {{ form.is_staff.label_tag }}
+          {% if form.is_staff.help_text %}<small class="form-text text-muted d-block">{{ form.is_staff.help_text }}</small>{% endif %}
+          {{ form.is_staff.errors }}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+
+
+    <div class="d-flex">
+      <button class="btn btn-primary me-2" type="submit">Guardar</button>
+      <a class="btn btn-secondary" href="{% url 'usuario:usuario_list' %}">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

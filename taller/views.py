@@ -6,13 +6,18 @@ from .models import Taller
 from .forms import TallerForm
 
 
-class TallerListView(ListView):
+class TallerListView(LoginRequiredMixin, ListView):
     model = Taller
     template_name = 'taller/taller_list.html'
     paginate_by = 20
 
     def get_queryset(self):
         qs = super().get_queryset()
+        
+        # Si el usuario tiene rol 'taller', filtrar solo los talleres a los que pertenece
+        if self.request.user.rol == 'taller':
+            qs = qs.filter(usuarios=self.request.user)
+        
         q = self.request.GET.get('q')
         if q:
             return qs.filter(

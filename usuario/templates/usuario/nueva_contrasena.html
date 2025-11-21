@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Contraseña - Rueda Visión</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-width: 450px;
+            width: 100%;
+        }
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 2rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 12px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .password-strength {
+            height: 5px;
+            margin-top: 5px;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3 class="mb-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-key me-2" viewBox="0 0 16 16">
+                        <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8m4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5"/>
+                        <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                    </svg>
+                    Nueva Contraseña
+                </h3>
+            </div>
+            <div class="card-body p-4">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="alert alert-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle me-2" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                        <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
+                    </svg>
+                    Código verificado correctamente. Ahora establece tu nueva contraseña.
+                </div>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        {{ form.password1.label_tag }}
+                        {{ form.password1 }}
+                        <div id="password-strength" class="password-strength bg-secondary"></div>
+                        <small class="text-muted">Mínimo 8 caracteres</small>
+                        {% if form.password1.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.password1.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form.password2.label_tag }}
+                        {{ form.password2 }}
+                        {% if form.password2.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.password2.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            Establecer Nueva Contraseña
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Indicador de fortaleza de contraseña
+        const password1 = document.querySelector('input[name="password1"]');
+        const strengthBar = document.getElementById('password-strength');
+
+        password1.addEventListener('input', function() {
+            const length = this.value.length;
+            let strength = 0;
+
+            if (length >= 8) strength++;
+            if (length >= 12) strength++;
+            if (/[a-z]/.test(this.value) && /[A-Z]/.test(this.value)) strength++;
+            if (/\d/.test(this.value)) strength++;
+            if (/[^a-zA-Z\d]/.test(this.value)) strength++;
+
+            strengthBar.classList.remove('bg-danger', 'bg-warning', 'bg-success', 'bg-secondary');
+            
+            if (length === 0) {
+                strengthBar.classList.add('bg-secondary');
+            } else if (strength <= 2) {
+                strengthBar.classList.add('bg-danger');
+                strengthBar.style.width = '33%';
+            } else if (strength <= 3) {
+                strengthBar.classList.add('bg-warning');
+                strengthBar.style.width = '66%';
+            } else {
+                strengthBar.classList.add('bg-success');
+                strengthBar.style.width = '100%';
+            }
+        });
+    </script>
+</body>
+</html>
